@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
-import { Video, Mic, MicOff, VideoOff, Play, Square, Upload, AlertCircle, Download, X, Wifi, WifiOff, RefreshCw, Camera, Monitor, ChevronDown, Tag, Trash2 } from 'lucide-react'
+import { Video, Mic, MicOff, VideoOff, Play, Square, Upload, AlertCircle, Download, X, Wifi, WifiOff, RefreshCw, Camera, Monitor, ChevronDown, Tag, Trash2, ChevronDown } from 'lucide-react'
 import { getDefaultStreamStartUrl } from '../utils/urls'
 import { loadSettingsFromStorage } from './SettingsModal'
 import ErrorModal from './ErrorModal'
