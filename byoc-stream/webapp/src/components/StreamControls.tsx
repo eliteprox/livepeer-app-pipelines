@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
-import { Video, Mic, MicOff, VideoOff, Play, Square, Upload, AlertCircle, Download, X, Wifi, WifiOff, RefreshCw, Camera, Monitor, ChevronDown, Tag, Trash2, ChevronDown } from 'lucide-react'
+import { Video, Mic, MicOff, VideoOff, Play, Square, Upload, AlertCircle, Download, X, Wifi, WifiOff, RefreshCw, Camera, Monitor, ChevronDown, Tag, Trash2, ChevronDown, Trash2, Tag } from 'lucide-react'
 import { getDefaultStreamStartUrl } from '../utils/urls'
 import { loadSettingsFromStorage } from './SettingsModal'
 import ErrorModal from './ErrorModal'
@@ -1818,6 +1818,17 @@ const StreamControls: React.FC<StreamControlsProps> = ({
                     </div>
                   </>
                 )}
+              </div>
+              
+              {/* Prompt Manager */}
+              <div className="mb-4">
+                <PromptManager 
+                  onAppendPrompts={handleAppendPrompts}
+                  className="mb-3"
+                />
+                <p className="text-xs text-gray-400">
+                  Save and reuse prompts with memorable names. Selected prompts will be added to the 'prompts' parameter.
+                </p>
               </div>
               
               {/* Add Parameter Input */}
