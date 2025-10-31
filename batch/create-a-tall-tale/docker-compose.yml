@@ -61,6 +61,7 @@ services:
     container_name: byoc-orchestrator
     volumes:
       - ./data/orchestrator:/data
+    network_mode: host
     ports:
       - 9995:9995
     command: ["-orchestrator",

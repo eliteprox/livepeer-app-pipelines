@@ -40,7 +40,7 @@ https://{$HOST}:{$HTTPS_PORT} {
 		@options method OPTIONS
 		respond @options 204
 
-		reverse_proxy http://byoc-stream-gateway-admin:3000
+		reverse_proxy http://byoc-stream-gateway-admin:3001
 	}
 
 	handle_path /mediamtx/* {
@@ -53,6 +53,7 @@ https://{$HOST}:{$HTTPS_PORT} {
 		@options method OPTIONS
 		respond @options 204
 
+		#reverse_proxy http://byoc-{$CAPABILITY_NAME}-mediamtx:8890
 		reverse_proxy http://byoc-stream-mediamtx:8890
 	}
 
