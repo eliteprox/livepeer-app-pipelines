@@ -1,0 +1,32 @@
+services:
+  comfystream:
+    image: livepeer/comfyui-base:pr-487
+    container_name: comfystream-byoc
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "${PORT:-8000}:8000"
+    volumes:
+      - ~/models/ComfyUI--models:/workspace/ComfyUI/models
+      - ~/models/ComfyUI--output:/workspace/ComfyUI/output
+    environment:
+      - ORCH_URL=${ORCH_URL}
+      - ORCH_SECRET=${ORCH_SECRET}
+      - CAPABILITY_NAME=${CAPABILITY_NAME:-comfystream}
+      - CAPABILITY_DESCRIPTION=${CAPABILITY_DESCRIPTION:-ComfyUI streaming processor for BYOC mode}
+      - CAPABILITY_URL=${CAPABILITY_URL}
+      - CAPABILITY_PRICE_PER_UNIT=${CAPABILITY_PRICE_PER_UNIT:-0}
+      - CAPABILITY_PRICE_SCALING=${CAPABILITY_PRICE_SCALING:-1}
+      - CAPABILITY_CAPACITY=${CAPABILITY_CAPACITY:-1}
+    restart: unless-stopped
+
+networks:
+  default:
+    name: byoc-stream
+    external: true
+
