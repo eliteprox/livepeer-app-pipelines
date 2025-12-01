@@ -198,31 +198,42 @@ const StreamControls: React.FC<StreamControlsProps> = ({
   
   const handlePipelineChange = (newValue: string) => {
     setPipeline(newValue)
+  }
+  
+  // Save pipeline to saved list and settings after successful stream start
+  const savePipelineAfterSuccess = (pipelineValue: string) => {
+    if (!pipelineValue.trim()) return
     
-    // Add to saved pipelines if not empty and not already in list
-    if (newValue.trim() && !savedPipelines.includes(newValue.trim())) {
-      const updatedPipelines = [newValue.trim(), ...savedPipelines]
+    // Add to saved pipelines if not already in list
+    if (!savedPipelines.includes(pipelineValue.trim())) {
+      const updatedPipelines = [pipelineValue.trim(), ...savedPipelines]
       setSavedPipelines(updatedPipelines)
       savePipelinesToStorage(updatedPipelines)
     }
     
-    // Save as default pipeline in settings (so it persists)
-    if (newValue.trim()) {
-      const currentSettings = loadSettingsFromStorage()
-      const updatedSettings = {
-        ...currentSettings,
-        defaultPipeline: newValue.trim()
-      }
-      try {
-        localStorage.setItem('livepeer-ai-video-streaming-url-settings', JSON.stringify(updatedSettings))
-      } catch (error) {
-        console.warn('Failed to save default pipeline:', error)
-      }
+    // Save as default pipeline in settings
+    const currentSettings = loadSettingsFromStorage()
+    const updatedSettings = {
+      ...currentSettings,
+      defaultPipeline: pipelineValue.trim()
+    }
+    try {
+      localStorage.setItem('livepeer-ai-video-streaming-url-settings', JSON.stringify(updatedSettings))
+    } catch (error) {
+      console.warn('Failed to save default pipeline:', error)
     }
   }
   
   const selectPipeline = (pipelineValue: string) => {
     handlePipelineChange(pipelineValue)
+    setShowPipelineDropdown(false)
+  }
+  
+  const clearAllPipelines = () => {
+    // Reset to default pipelines
+    const defaultPipelines = ['comfystream', 'video-analysis', 'vtuber', 'passthrough', 'noop']
+    setSavedPipelines(defaultPipelines)
+    savePipelinesToStorage(defaultPipelines)
     setShowPipelineDropdown(false)
   }
 
@@ -505,7 +516,7 @@ const StreamControls: React.FC<StreamControlsProps> = ({
         setConnectionStatus('connected')
         
         // Save pipeline after successful stream start
-        //savePipelineAfterSuccess(pipeline)
+        savePipelineAfterSuccess(pipeline)
         return
       }
       
@@ -685,7 +696,7 @@ const StreamControls: React.FC<StreamControlsProps> = ({
         setPlaybackUrl(playbackUrl)
         
         // Save pipeline after successful stream start
-        //savePipelineAfterSuccess(pipeline)
+        savePipelineAfterSuccess(pipeline)
         
         // Start collecting real-time stats
         statsIntervalRef.current = window.setInterval(() => {
@@ -1661,6 +1672,18 @@ const StreamControls: React.FC<StreamControlsProps> = ({
               {/* Dropdown List */}
               {showPipelineDropdown && savedPipelines.length > 0 && (
                 <div className="absolute z-10 w-full mt-1 bg-slate-800 border border-white/20 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                  {/* Reset to Default Button */}
+                  <div className="border-b border-white/10">
+                    <button
+                      type="button"
+                      onClick={clearAllPipelines}
+                      className="w-full px-4 py-2.5 text-left text-sm text-orange-400 hover:bg-orange-900/30 transition-colors flex items-center"
+                      title="Reset to default pipelines"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Reset to Default List
+                    </button>
+                  </div>
                   {savedPipelines.map((savedPipeline, index) => (
                     <button
                       key={index}
